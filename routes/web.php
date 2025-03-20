@@ -17,12 +17,12 @@ use App\Http\Controllers\EnquiryController;
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
 
 // About page
 Route::get('/about', function () {
     return view('about');
-});
+})->name('about');
 
 // Services Routes
 Route::get('/services', [ServicesController::class, 'index'])->name('services.index');

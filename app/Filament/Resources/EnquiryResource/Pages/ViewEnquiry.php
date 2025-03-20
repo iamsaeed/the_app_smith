@@ -19,7 +19,7 @@ class ViewEnquiry extends ViewRecord
                 ->color('success')
                 ->visible(fn () => !$this->record->is_read)
                 ->action(fn () => $this->record->markAsRead())
-                ->after(fn () => $this->refreshRecord()),
+                ->after(fn () => $this->refresh()),
 
             Actions\Action::make('mark_as_unread')
                 ->label('Mark as Unread')
@@ -27,7 +27,7 @@ class ViewEnquiry extends ViewRecord
                 ->color('danger')
                 ->visible(fn () => $this->record->is_read)
                 ->action(fn () => $this->record->markAsUnread())
-                ->after(fn () => $this->refreshRecord()),
+                ->after(fn () => $this->refresh()),
 
             Actions\DeleteAction::make(),
         ];
@@ -40,7 +40,7 @@ class ViewEnquiry extends ViewRecord
         // Auto-mark as read when viewed
         if (!$this->record->is_read) {
             $this->record->markAsRead();
-            $this->refreshRecord();
+            $this->refresh();
         }
     }
 }

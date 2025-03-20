@@ -36,7 +36,7 @@
           <a href="{{ route('home') }}" class="inline-block px-8 py-4 bg-blue-600 text-white font-bold rounded-md shadow-lg hover:bg-blue-700 transform transition duration-300 hover:scale-105">
             Back to Home
           </a>
-          <a href="{{ route('services') }}" class="inline-block px-8 py-4 bg-gray-200 text-gray-800 font-bold rounded-md hover:bg-gray-300 transform transition duration-300 hover:scale-105">
+          <a href="{{ route('services.index') }}" class="inline-block px-8 py-4 bg-gray-200 text-gray-800 font-bold rounded-md hover:bg-gray-300 transform transition duration-300 hover:scale-105">
             View Services
           </a>
         </div>

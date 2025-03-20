@@ -118,4 +118,53 @@ class UnsplashService
             $topic . ' business',
         ];
     }
+
+    /**
+     * Get an image from Unsplash based on a single string description.
+     *
+     * @param string $description
+     * @return string|null URL of the downloaded image
+     */
+    public function getUnsplashImage(string $description): ?string
+    {
+        Log::info('UnsplashService: Searching for image with description: ' . $description);
+
+        if (empty($description) || empty($this->config['access_key'])) {
+            Log::warning('Unsplash image search failed: Missing description or API key');
+            return null;
+        }
+
+        $query = $description;
+        $perPage = $this->config['per_page'] ?? 5;
+        $orientation = $this->config['orientation'] ?? 'landscape';
+
+        try {
+            $requestUrl = 'https://api.unsplash.com/search/photos';
+            $requestParams = [
+                'client_id' => $this->config['access_key'],
+                'query' => $query,
+                'per_page' => $perPage,
+                'orientation' => $orientation,
+            ];
+
+            $response = Http::get($requestUrl, $requestParams);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (isset($data['results']) && count($data['results']) > 0) {
+                    $image = $data['results'][0];
+                    return $image['urls']['regular'];
+                } else {
+                    Log::warning('Unsplash search returned no results for query: ' . $query);
+                }
+            } else {
+                Log::error('Unsplash API error: ' . $response->status() . ' - ' . $response->body());
+            }
+        } catch (\Exception $e) {
+            Log::error('Error fetching image from Unsplash: ' . $e->getMessage());
+        }
+
+        return null;
+    }
 }
