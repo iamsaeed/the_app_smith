@@ -134,6 +134,18 @@
                 @enderror
               </div>
 
+              <!-- Captcha -->
+              <div class="mb-6">
+                <label for="captcha_answer" class="block text-sm font-medium text-gray-700 mb-2">Security Check</label>
+                <div class="flex items-center bg-gray-100 p-3 rounded-md mb-2">
+                  <span class="text-lg font-medium text-gray-800 mr-3">{{ $captcha['question'] }}</span>
+                  <input type="number" id="captcha_answer" name="captcha_answer" class="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                @error('captcha_answer')
+                  <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+              </div>
+
               <div>
                 <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition transform hover:scale-105">
                   Send Message

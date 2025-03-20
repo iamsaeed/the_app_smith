@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\EnquiryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -182,13 +183,7 @@ Route::get('/products/{slug}', function ($slug) {
     return view('products.show', compact('app'));
 })->name('products.show');
 
-// Contact page
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-// Contact form submission
-Route::post('/contact', function () {
-    // This will be implemented later
-    return redirect()->back()->with('success', 'Thank you for your message! We will get back to you soon.');
-})->name('contact.submit');
+// Contact routes
+Route::get('/contact', [EnquiryController::class, 'showContactForm'])->name('contact');
+Route::post('/contact', [EnquiryController::class, 'submitContactForm'])->name('contact.submit');
+Route::get('/thank-you', [EnquiryController::class, 'thankYou'])->name('contact.thank-you');
