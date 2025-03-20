@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'unsplash' => [
+        'access_key' => env('UNSPLASH_ACCESS_KEY'),
+        'per_page' => 5,
+        'orientation' => 'landscape', // landscape, portrait, or squarish
+    ],
+
 ];
