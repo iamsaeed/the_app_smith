@@ -109,11 +109,11 @@ class ServiceResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('description')
-                    ->limit(50)
+                    ->words(10)
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();
 
-                        if (strlen($state) <= $column->getLimit()) {
+                        if (strlen($state) <= 60) {
                             return null;
                         }
 

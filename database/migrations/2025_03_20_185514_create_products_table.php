@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('name');
             $table->string('slug')->unique();
-            $table->text('excerpt')->nullable();
-            $table->longText('content');
-            $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
-            $table->timestamp('published_at')->nullable();
-            $table->boolean('status')->default(false);
+            $table->text('short_description')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('product_type')->default('web_app')->comment('web_app, mobile_app, plugin, etc.');
+            $table->boolean('status')->default(false)->comment('Active or Inactive');
             $table->boolean('featured')->default(false);
 
             // SEO fields
@@ -35,7 +34,6 @@ return new class extends Migration
             $table->foreignId('updated_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -43,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('products');
     }
 };

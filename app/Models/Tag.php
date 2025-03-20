@@ -45,6 +45,14 @@ class Tag extends Model
     }
 
     /**
+     * Get the products that are tagged with this tag.
+     */
+    public function products(): MorphToMany
+    {
+        return $this->morphedByMany(Product::class, 'taggable');
+    }
+
+    /**
      * Get the user who created the tag.
      */
     public function creator(): BelongsTo

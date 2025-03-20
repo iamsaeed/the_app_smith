@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Blog extends Model implements HasMedia
+class Product extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
@@ -20,15 +23,13 @@ class Blog extends Model implements HasMedia
      * @var array<string>
      */
     protected $fillable = [
-        'title',
+        'name',
         'slug',
-        'excerpt',
-        'content',
-        'published_at',
+        'short_description',
+        'description',
+        'product_type',
         'status',
         'featured',
-        'created_id',
-        'updated_id',
         // SEO fields
         'meta_title',
         'meta_description',
@@ -36,6 +37,9 @@ class Blog extends Model implements HasMedia
         'og_image',
         'og_title',
         'og_description',
+        // Tracking
+        'created_id',
+        'updated_id',
     ];
 
     /**
@@ -46,12 +50,11 @@ class Blog extends Model implements HasMedia
     protected $casts = [
         'status' => 'boolean',
         'featured' => 'boolean',
-        'published_at' => 'datetime',
         'meta_keywords' => 'array',
     ];
 
     /**
-     * Register media collections for the blog.
+     * Register media collections for the product.
      */
     public function registerMediaCollections(): void
     {
@@ -74,7 +77,7 @@ class Blog extends Model implements HasMedia
                     ->sharpen(10);
             });
 
-        $this->addMediaCollection('gallery')
+        $this->addMediaCollection('screenshots')
             ->registerMediaConversions(function (Media $media) {
                 $this->addMediaConversion('thumb')
                     ->width(200)
@@ -89,7 +92,31 @@ class Blog extends Model implements HasMedia
     }
 
     /**
-     * Get all of the categories for the blog.
+     * Get all of the product details.
+     */
+    public function details(): HasOne
+    {
+        return $this->hasOne(ProductDetail::class);
+    }
+
+    /**
+     * Get all of the features for the product.
+     */
+    public function features(): HasMany
+    {
+        return $this->hasMany(ProductFeature::class);
+    }
+
+    /**
+     * Get all of the pricing plans for the product.
+     */
+    public function pricingPlans(): HasMany
+    {
+        return $this->hasMany(ProductPricingPlan::class);
+    }
+
+    /**
+     * Get all of the categories for the product.
      */
     public function categories(): MorphToMany
     {
@@ -97,7 +124,7 @@ class Blog extends Model implements HasMedia
     }
 
     /**
-     * Get all of the tags for the blog.
+     * Get all of the tags for the product.
      */
     public function tags(): MorphToMany
     {
@@ -105,7 +132,23 @@ class Blog extends Model implements HasMedia
     }
 
     /**
-     * Get the user who created the blog.
+     * Get all of the testimonials for the product.
+     */
+    public function testimonials(): MorphMany
+    {
+        return $this->morphMany(Testimonial::class, 'testimonialable');
+    }
+
+    /**
+     * Get all of the FAQs for the product.
+     */
+    public function faqs(): MorphMany
+    {
+        return $this->morphMany(Faq::class, 'faqable');
+    }
+
+    /**
+     * Get the user who created the product.
      */
     public function creator(): BelongsTo
     {
@@ -113,7 +156,7 @@ class Blog extends Model implements HasMedia
     }
 
     /**
-     * Get the user who last updated the blog.
+     * Get the user who last updated the product.
      */
     public function updater(): BelongsTo
     {
@@ -121,24 +164,23 @@ class Blog extends Model implements HasMedia
     }
 
     /**
-     * Get the URL for the blog.
+     * Get the URL for the product.
      */
     public function getUrlAttribute(): string
     {
-        return url("/blog/{$this->slug}");
+        return url("/products/{$this->slug}");
     }
 
     /**
-     * Get published blogs.
+     * Scope a query to only include active products.
      */
-    public function scopePublished($query)
+    public function scopeActive($query)
     {
-        return $query->where('status', true)
-            ->where('published_at', '<=', now());
+        return $query->where('status', true);
     }
 
     /**
-     * Get featured blogs.
+     * Scope a query to only include featured products.
      */
     public function scopeFeatured($query)
     {

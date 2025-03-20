@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Category extends Model
 {
@@ -18,6 +19,7 @@ class Category extends Model
      */
     protected $fillable = [
         'name',
+        'type',
         'slug',
         'description',
         'bg',
@@ -40,9 +42,25 @@ class Category extends Model
     /**
      * Get the blogs for the category.
      */
-    public function blogs(): HasMany
+    public function blogs(): MorphToMany
     {
-        return $this->hasMany(Blog::class);
+        return $this->morphedByMany(Blog::class, 'categorizable');
+    }
+
+    /**
+     * Get products that are categorized with this category.
+     */
+    public function products(): MorphToMany
+    {
+        return $this->morphedByMany(Product::class, 'categorizable');
+    }
+
+    /**
+     * Scope a query to only include categories of a given type.
+     */
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 
     /**

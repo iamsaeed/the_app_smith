@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BlogResource\Pages;
 use App\Filament\Resources\BlogResource\RelationManagers;
 use App\Models\Blog;
+use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -148,9 +149,10 @@ class BlogResource extends Resource
 
                         Forms\Components\Section::make('Relationships')
                             ->schema([
-                                Forms\Components\Select::make('category_id')
-                                    ->label('Category')
-                                    ->relationship('category', 'name')
+                                Forms\Components\Select::make('categories')
+                                    ->label('Categories')
+                                    ->relationship('categories', 'name')
+                                    ->multiple()
                                     ->searchable()
                                     ->preload()
                                     ->createOptionForm([
@@ -159,6 +161,9 @@ class BlogResource extends Resource
                                         Forms\Components\TextInput::make('slug')
                                             ->required()
                                             ->unique(),
+                                        Forms\Components\TextInput::make('type')
+                                            ->default('blog')
+                                            ->required(),
                                     ]),
 
                                 Forms\Components\Select::make('tags')
@@ -192,10 +197,10 @@ class BlogResource extends Resource
 
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
-                    ->limit(50),
+                    ->words(7),
 
-                Tables\Columns\TextColumn::make('category.name')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('categories.name')
+                    ->badge()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('published_at')
@@ -233,9 +238,10 @@ class BlogResource extends Resource
                         '0' => 'Not Featured',
                     ]),
 
-                Tables\Filters\SelectFilter::make('category_id')
-                    ->label('Category')
-                    ->relationship('category', 'name')
+                Tables\Filters\SelectFilter::make('categories')
+                    ->label('Categories')
+                    ->relationship('categories', 'name')
+                    ->multiple()
                     ->searchable()
                     ->preload(),
             ])
@@ -271,6 +277,6 @@ class BlogResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['category', 'tags', 'media']);
+            ->withCount(['categories', 'tags']);
     }
 }
