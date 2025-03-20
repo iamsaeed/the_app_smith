@@ -90,6 +90,68 @@ class GenerateServiceCommand extends Command
                 $this->warn('No image search terms generated. Using default image.');
             }
 
+            // Step 4: Create service features
+            $this->info('Creating service features...');
+            if (isset($serviceData['features']) && is_array($serviceData['features'])) {
+                $sortOrder = 0;
+                foreach ($serviceData['features'] as $feature) {
+                    ProductFeature::create([
+                        'product_id' => $service->id,
+                        'name' => $feature['title'] ?? '',
+                        'description' => $feature['description'] ?? '',
+                        'is_highlighted' => true,
+                        'sort_order' => $sortOrder++,
+                    ]);
+                }
+                $this->info('Created ' . count($serviceData['features']) . ' features.');
+            }
+
+            // Step 5: Generate FAQs
+            $this->info('Generating FAQs...');
+            $faqData = $openAIService->generateServiceFAQs($serviceName, $serviceData['description'] ?? '');
+
+            if ($faqData && isset($faqData['faqs']) && is_array($faqData['faqs'])) {
+                $sortOrder = 0;
+                foreach ($faqData['faqs'] as $faq) {
+                    Faq::create([
+                        'faqable_type' => Service::class,
+                        'faqable_id' => $service->id,
+                        'question' => $faq['question'] ?? '',
+                        'answer' => $faq['answer'] ?? '',
+                        'status' => true,
+                        'sort_order' => $sortOrder++,
+                        'created_id' => 1,
+                        'updated_id' => 1,
+                    ]);
+                }
+                $this->info('Created ' . count($faqData['faqs']) . ' FAQs.');
+            }
+
+            // Step 6: Generate testimonials
+            $this->info('Generating testimonials...');
+            $testimonialData = $openAIService->generateServiceTestimonials($serviceName, $serviceData['description'] ?? '');
+
+            if ($testimonialData && isset($testimonialData['testimonials']) && is_array($testimonialData['testimonials'])) {
+                $sortOrder = 0;
+                foreach ($testimonialData['testimonials'] as $testimonial) {
+                    Testimonial::create([
+                        'testimonialable_type' => Service::class,
+                        'testimonialable_id' => $service->id,
+                        'customer_name' => $testimonial['customer_name'] ?? '',
+                        'customer_position' => $testimonial['customer_position'] ?? '',
+                        'customer_company' => $testimonial['customer_company'] ?? '',
+                        'comment' => $testimonial['comment'] ?? '',
+                        'rating' => $testimonial['rating'] ?? 5,
+                        'is_featured' => false,
+                        'status' => true,
+                        'sort_order' => $sortOrder++,
+                        'created_id' => 1,
+                        'updated_id' => 1,
+                    ]);
+                }
+                $this->info('Created ' . count($testimonialData['testimonials']) . ' testimonials.');
+            }
+
             DB::commit();
 
             $this->info('Service generation completed successfully!');

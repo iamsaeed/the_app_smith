@@ -70,4 +70,12 @@ class Service extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'updated_id');
     }
+
+    /**
+     * Get the testimonials for the service.
+     */
+    public function testimonials()
+    {
+        return $this->morphMany(Testimonial::class, 'testimonialable');
+    }
 }

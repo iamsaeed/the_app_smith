@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ServicesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 // About page
@@ -22,10 +23,8 @@ Route::get('/about', function () {
     return view('about');
 });
 
-// Services page
-Route::get('/services', function () {
-    return view('services');
-});
+// Services Routes
+Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
 
 // Blog page
 Route::get('/blog', function () {
@@ -186,7 +185,7 @@ Route::get('/products/{slug}', function ($slug) {
 // Contact page
 Route::get('/contact', function () {
     return view('contact');
-});
+})->name('contact');
 
 // Contact form submission
 Route::post('/contact', function () {
