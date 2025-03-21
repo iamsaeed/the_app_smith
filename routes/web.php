@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\LinkedInController;
 
 /*
 |--------------------------------------------------------------------------
@@ -187,3 +188,15 @@ Route::get('/products/{slug}', function ($slug) {
 Route::get('/contact', [EnquiryController::class, 'showContactForm'])->name('contact');
 Route::post('/contact', [EnquiryController::class, 'submitContactForm'])->name('contact.submit');
 Route::get('/thank-you', [EnquiryController::class, 'thankYou'])->name('contact.thank-you');
+
+// LinkedIn Routes
+Route::get('/auth/linkedin', [LinkedInController::class, 'redirect'])->name('linkedin.auth');
+Route::get('/auth/linkedin/callback', [LinkedInController::class, 'callback'])->name('linkedin.callback');
+Route::get('/linkedin/success', [LinkedInController::class, 'success'])->name('linkedin.success');
+Route::get('/linkedin/failed', [LinkedInController::class, 'failed'])->name('linkedin.failed');
+Route::post('/linkedin/disconnect', [LinkedInController::class, 'disconnect'])->name('linkedin.disconnect');
+
+// Legal Pages
+Route::get('/privacy-policy', function () {
+    return view('privacy-policy');
+})->name('privacy.policy');

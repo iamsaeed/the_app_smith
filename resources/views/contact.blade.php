@@ -36,7 +36,7 @@
                 </div>
                 <div class="ml-4">
                   <h3 class="text-lg font-medium text-gray-900">Phone</h3>
-                  <p class="mt-1 text-gray-600">+1 (234) 567-890</p>
+                  <p class="mt-1 text-gray-600">{{ config('app.contact.phone') }}</p>
                 </div>
               </div>
 
@@ -48,7 +48,7 @@
                 </div>
                 <div class="ml-4">
                   <h3 class="text-lg font-medium text-gray-900">Email</h3>
-                  <p class="mt-1 text-gray-600">info@laraveldev.com</p>
+                  <p class="mt-1 text-gray-600">{{ config('app.contact.email') }}</p>
                 </div>
               </div>
 
@@ -61,7 +61,7 @@
                 </div>
                 <div class="ml-4">
                   <h3 class="text-lg font-medium text-gray-900">Location</h3>
-                  <p class="mt-1 text-gray-600">San Francisco, CA</p>
+                  <p class="mt-1 text-gray-600">{{ config('app.contact.address') }}</p>
                 </div>
               </div>
             </div>
@@ -165,7 +165,7 @@
         <div class="text-center mb-12">
           <h2 class="text-3xl font-bold text-gray-900 mb-4">Location</h2>
           <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-            Based in San Francisco, but available for remote work worldwide
+            Based in {{ config('app.contact.address') }}, but available for remote work worldwide
           </p>
         </div>
         <div class="h-96 bg-gray-300 rounded-lg overflow-hidden shadow-md">

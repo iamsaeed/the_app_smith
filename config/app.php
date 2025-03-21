@@ -9,11 +9,27 @@ return [
     |
     | This value is the name of your application, which will be used when the
     | framework needs to place the application's name in a notification or
-    | other UI elements where an application name needs to be displayed.
+    | any other location as required by the application or its packages.
     |
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Site Contact Information
+    |--------------------------------------------------------------------------
+    |
+    | This section contains the contact information for your site which will
+    | be used across the application for consistency.
+    |
+    */
+
+    'contact' => [
+        'email' => env('SITE_EMAIL', 'info@thecodesmith.com'),
+        'phone' => env('SITE_PHONE', '123-456-7890'),
+        'address' => env('SITE_ADDRESS', '123 Main St, Anytown, USA 12345'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -180,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\OpenAIServiceProvider::class,
         App\Providers\UnsplashServiceProvider::class,
+        App\Providers\LinkedInServiceProvider::class,
     ],
 
     /*

@@ -36,6 +36,9 @@ class Blog extends Model implements HasMedia
         'og_image',
         'og_title',
         'og_description',
+        // LinkedIn sharing fields
+        'shared_to_linkedin',
+        'linkedin_shared_at',
     ];
 
     /**
@@ -48,6 +51,8 @@ class Blog extends Model implements HasMedia
         'featured' => 'boolean',
         'published_at' => 'datetime',
         'meta_keywords' => 'array',
+        'shared_to_linkedin' => 'boolean',
+        'linkedin_shared_at' => 'datetime',
     ];
 
     /**

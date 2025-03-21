@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('og_image')->nullable();
             $table->string('og_title')->nullable();
             $table->text('og_description')->nullable();
+            $table->boolean('shared_to_linkedin')->default(false);
+            $table->timestamp('linkedin_shared_at')->nullable();
 
             // Tracking
             $table->foreignId('created_id')->nullable()->constrained('users')->nullOnDelete();
