@@ -17,12 +17,12 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="max-w-3xl mx-auto text-center">
                 <!-- Headline with animation -->
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 opacity-0 transform translate-y-4 transition duration-700 ease-out fade-in">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 opacity-0 transform translate-y-4 transition duration-700 ease-out fade-in backdrop-blur-sm bg-black/30 inline-block px-6 py-3 rounded-lg shadow-lg">
                     Transforming Ideas into Reality
                 </h1>
 
                 <!-- Subheading with animation -->
-                <p class="text-xl md:text-2xl text-gray-200 mb-10 opacity-0 transform translate-y-4 transition duration-700 delay-100 ease-out fade-in">
+                <p class="text-xl md:text-2xl text-gray-200 mb-10 opacity-0 transform translate-y-4 transition duration-700 delay-100 ease-out fade-in backdrop-blur-sm bg-black/30 inline-block px-5 py-2 rounded-lg shadow-md">
                     Expert in crafting innovative software solutions & cutting-edge applications
                 </p>
 
