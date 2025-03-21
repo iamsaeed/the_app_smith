@@ -105,43 +105,64 @@ class OpenAIService
         Generate detailed information for a individual service called "{$serviceName}" that is provided individuallly to each clients.
         The service should not have word like our, we, us, etc., it should be like I, me, my, etc.
         This is a personal service tailored to each client's specific needs, not a mass-market product.
+        Do not use the word 'Bespoke' in the title.
 
         The response should include:
-        - A catchy title for the personal service
+        - A simple title for the personal service
         - A detailed description of about 150 words that explains how this service is personally delivered to each client
-        - Emphasize the one-on-one nature of the service and individual attention each client receives
-        - 3-5 key features that highlight the personalized approach
-        - 2-3 benefits that focus on the individual client experience
-        - 3-5 relevant image search terms that could be used to find a representative image for this personal service on Unsplash (prefer images showing one-on-one interaction)
 
         Response should be in the following JSON format:
         {
         "title": "The catchy personal service title",
-        "description": "Detailed description of the individualized service (about 150 words)",
-        "features": [
-            {
-            "title": "Personalized feature title",
-            "description": "How this feature is tailored to individual needs"
-            },
-            {
-            "title": "Another individual-focused feature",
-            "description": "Description emphasizing personal attention"
-            }
-            // more features
-        ],
-        "benefits": [
-            "Individual benefit 1",
-            "Personal benefit 2",
-            // more benefits
-        ],
-        "image_search_terms": [
-            "Search term 1",
-            "Search term 2",
-            // more search terms
-        ]
+        "description": "Detailed description of the individualized service (about 150 words)"
         }
         EOT;
 
         return $this->generateContent($prompt);
+    }
+
+    /**
+     * Generate a blog post with research on a given topic
+     *
+     * @param string $topic The topic for the blog post
+     * @return array|null The generated blog data
+     */
+    public function generateBlogContent(string $topic): ?array
+    {
+        $prompt = <<<EOT
+        Research and generate a comprehensive, original blog post about "{$topic}".
+
+        The blog post should:
+        - Have a modern, engaging title (avoid clickbait)
+        - Include a short excerpt/summary (60-80 words)
+        - Contain detailed content of 500-1000 words with well-researched information
+        - Be organized into clear sections with headings (use markdown ## for headings)
+        - Include factual information with references where appropriate
+        - Be written in a conversational but professional tone
+        - Suggest a relevant category for this blog post from common blog categories
+        - Suggest 5-7 SEO tags relevant to the content
+        - Include SEO metadata (meta title and meta description)
+
+        The response should be in the following JSON format:
+        {
+          "title": "Engaging blog post title",
+          "slug": "url-friendly-slug-for-the-post",
+          "excerpt": "Short summary of the post content (60-80 words)",
+          "content": "Full blog post content with simple html formatting for headings. 500-1000 words with references where applicable.",
+          "category": "Suggested category for this post",
+          "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+          "meta_title": "SEO-optimized title (under 60 characters)",
+          "meta_description": "SEO-optimized description (under 160 characters)"
+        }
+
+        Make sure the content is completely original and not copied from existing sources.
+        EOT;
+
+        $options = [
+            'temperature' => 0.8, // Slightly higher temperature for creativity
+            'max_tokens' => 2000, // Allow longer response for full blog
+        ];
+
+        return $this->generateContent($prompt, $options);
     }
 }

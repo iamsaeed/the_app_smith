@@ -13,6 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 
 class GenerateServiceCommand extends Command
 {
@@ -61,95 +64,56 @@ class GenerateServiceCommand extends Command
                 'updated_id' => 1, // Default admin user
             ]);
 
-            // Step 3: Get and attach image to the service
-            $this->info('Searching for an appropriate image...');
-            if (isset($serviceData['image_search_terms']) && !empty($serviceData['image_search_terms'])) {
-                $this->line('Using search terms: ' . implode(', ', $serviceData['image_search_terms']));
+            // Step 3: Get image for the service using FetchUnsplashImageCommand
+            $this->info('Fetching image for service...');
+            $imageSearchTerm = $serviceData['title'] ?? $serviceName;
 
-                $imageData = $unsplashService->getImage($serviceData['image_search_terms']);
+            // Run the command to fetch image
+            $exitCode = Artisan::call('unsplash:get-image', [
+                'description' => $imageSearchTerm
+            ]);
 
-                if ($imageData) {
-                    $this->info('Found image: ' . $imageData['filename']);
-                    $this->info('Photographer: ' . $imageData['photographer']);
+            if ($exitCode === 0) {
+                // Get the output from the command
+                $output = Artisan::output();
+
+                // Extract the image path from the output
+                if (preg_match('/Public URL: (.+)$/m', $output, $matches)) {
+                    $publicUrl = trim($matches[1]);
+                    $this->info("Image URL: $publicUrl");
+
+                    // Extract the filename from the URL
+                    $filename = basename($publicUrl);
+                    $sourcePath = Storage::disk('public')->path('unsplash/' . $filename);
+
+                    // Create the destination directory if it doesn't exist
+                    $destinationDir = public_path('images/services');
+                    if (!File::exists($destinationDir)) {
+                        File::makeDirectory($destinationDir, 0755, true);
+                    }
+
+                    // Copy the image to the services folder
+                    $destinationPath = $destinationDir . '/' . $filename;
+                    File::copy($sourcePath, $destinationPath);
 
                     // Add the image to the media library
-                    $service->addMedia($imageData['path'])
+                    $service->addMedia($destinationPath)
                         ->usingName($service->name)
                         ->withCustomProperties([
-                            'photographer' => $imageData['photographer'],
-                            'credit_url' => $imageData['credit_url'],
                             'source' => 'Unsplash'
                         ])
                         ->toMediaCollection('image');
 
                     $this->info('Image attached to service successfully.');
+
+                    // Delete the temporary file
+                    File::delete($sourcePath);
+                    $this->info('Temporary image file cleaned up.');
                 } else {
-                    $this->warn('No suitable image found. Using default image.');
+                    $this->warn('Could not extract image path from command output. Using default image.');
                 }
             } else {
-                $this->warn('No image search terms generated. Using default image.');
-            }
-
-            // Step 4: Create service features
-            $this->info('Creating service features...');
-            if (isset($serviceData['features']) && is_array($serviceData['features'])) {
-                $sortOrder = 0;
-                foreach ($serviceData['features'] as $feature) {
-                    ProductFeature::create([
-                        'product_id' => $service->id,
-                        'name' => $feature['title'] ?? '',
-                        'description' => $feature['description'] ?? '',
-                        'is_highlighted' => true,
-                        'sort_order' => $sortOrder++,
-                    ]);
-                }
-                $this->info('Created ' . count($serviceData['features']) . ' features.');
-            }
-
-            // Step 5: Generate FAQs
-            $this->info('Generating FAQs...');
-            $faqData = $openAIService->generateServiceFAQs($serviceName, $serviceData['description'] ?? '');
-
-            if ($faqData && isset($faqData['faqs']) && is_array($faqData['faqs'])) {
-                $sortOrder = 0;
-                foreach ($faqData['faqs'] as $faq) {
-                    Faq::create([
-                        'faqable_type' => Service::class,
-                        'faqable_id' => $service->id,
-                        'question' => $faq['question'] ?? '',
-                        'answer' => $faq['answer'] ?? '',
-                        'status' => true,
-                        'sort_order' => $sortOrder++,
-                        'created_id' => 1,
-                        'updated_id' => 1,
-                    ]);
-                }
-                $this->info('Created ' . count($faqData['faqs']) . ' FAQs.');
-            }
-
-            // Step 6: Generate testimonials
-            $this->info('Generating testimonials...');
-            $testimonialData = $openAIService->generateServiceTestimonials($serviceName, $serviceData['description'] ?? '');
-
-            if ($testimonialData && isset($testimonialData['testimonials']) && is_array($testimonialData['testimonials'])) {
-                $sortOrder = 0;
-                foreach ($testimonialData['testimonials'] as $testimonial) {
-                    Testimonial::create([
-                        'testimonialable_type' => Service::class,
-                        'testimonialable_id' => $service->id,
-                        'customer_name' => $testimonial['customer_name'] ?? '',
-                        'customer_position' => $testimonial['customer_position'] ?? '',
-                        'customer_company' => $testimonial['customer_company'] ?? '',
-                        'comment' => $testimonial['comment'] ?? '',
-                        'rating' => $testimonial['rating'] ?? 5,
-                        'is_featured' => false,
-                        'status' => true,
-                        'sort_order' => $sortOrder++,
-                        'created_id' => 1,
-                        'updated_id' => 1,
-                    ]);
-                }
-                $this->info('Created ' . count($testimonialData['testimonials']) . ' testimonials.');
+                $this->warn('Failed to fetch image from Unsplash. Using default image.');
             }
 
             DB::commit();

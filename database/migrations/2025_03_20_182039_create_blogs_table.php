@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
             $table->longText('content');
-            $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('published_at')->nullable();
             $table->boolean('status')->default(false);
             $table->boolean('featured')->default(false);
@@ -35,7 +34,7 @@ return new class extends Migration
             $table->foreignId('updated_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
-        
+
     }
 
     /**
