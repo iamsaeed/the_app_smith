@@ -55,6 +55,8 @@ class Blog extends Model implements HasMedia
         'linkedin_shared_at' => 'datetime',
     ];
 
+
+
     /**
      * Register media collections for the blog.
      */
@@ -131,6 +133,21 @@ class Blog extends Model implements HasMedia
     public function getUrlAttribute(): string
     {
         return url("/blog/{$this->slug}");
+    }
+
+    public function getMetaKeywordsStringAttribute()
+    {
+        if (empty($this->meta_keywords)) {
+            return '';
+        }
+
+        if (is_string($this->meta_keywords)) {
+            return $this->meta_keywords;
+        }
+
+        return is_array($this->meta_keywords)
+            ? implode(', ', $this->meta_keywords)
+            : '';
     }
 
     /**

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\LinkedInController;
+use App\Http\Controllers\BlogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,95 +29,12 @@ Route::get('/about', function () {
 // Services Routes
 Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
 
-// Blog page
-Route::get('/blog', function () {
-    return view('blog.index');
-})->name('blog.index');
-
-// Blog post page
-Route::get('/blog/{slug}', function ($slug) {
-    // This will be implemented later to fetch the actual post
-    // For now, we'll pass dummy post data
-    $post = (object)[
-        'title' => 'Modern Web Development Trends in 2024',
-        'slug' => $slug,
-        'excerpt' => 'Explore the latest trends shaping the future of web development, from AI-powered interfaces to WebAssembly innovations.',
-        'content' => '<p>This is a sample blog post content. In a real application, this would be pulled from a database.</p>
-                      <p>Here we would have more detailed content about modern web development trends in 2024.</p>',
-        'image' => 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80',
-        'category' => 'Web Development',
-        'tags' => ['JavaScript', 'React', 'Vue', 'WebAssembly'],
-        'publishedAt' => '2024-03-15T10:00:00',
-        'updatedAt' => '2024-03-16T14:30:00',
-        'publishedDate' => 'March 15, 2024',
-        'readTime' => 10,
-        'author' => (object)[
-            'name' => 'John Doe',
-            'avatar' => 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
-            'bio' => 'John is a senior web developer with over 10 years of experience in creating modern web applications.',
-            'twitter' => 'https://twitter.com/johndoe',
-            'github' => 'https://github.com/johndoe',
-            'linkedin' => 'https://linkedin.com/in/johndoe'
-        ]
-    ];
-
-    // Dummy related posts data
-    $relatedPosts = [
-        (object)[
-            'title' => 'Essential JavaScript Features for 2024',
-            'slug' => 'modern-javascript-features-2024',
-            'excerpt' => 'Discover the must-know JavaScript features and techniques that will boost your productivity in 2024.',
-            'image' => 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80',
-            'category' => 'Web Development',
-            'readTime' => 8,
-            'author' => (object)[
-                'name' => 'Sarah Johnson',
-                'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80'
-            ]
-        ],
-        (object)[
-            'title' => 'Comparing React State Management Solutions',
-            'slug' => 'react-state-management-comparison',
-            'excerpt' => 'An in-depth analysis of different state management approaches in React applications.',
-            'image' => 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80',
-            'category' => 'Web Development',
-            'readTime' => 12,
-            'author' => (object)[
-                'name' => 'Michael Chen',
-                'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80'
-            ]
-        ],
-        (object)[
-            'title' => 'Next.js vs Remix: Which React Framework to Choose?',
-            'slug' => 'nextjs-vs-remix',
-            'excerpt' => 'A detailed comparison of Next.js and Remix for building modern React applications.',
-            'image' => 'https://images.unsplash.com/photo-1618761714954-0b8cd0026356?auto=format&fit=crop&q=80',
-            'category' => 'Web Development',
-            'readTime' => 9,
-            'author' => (object)[
-                'name' => 'Lisa Wang',
-                'avatar' => 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80'
-            ]
-        ]
-    ];
-
-    return view('blog.show', compact('post', 'relatedPosts'));
-})->name('blog.show');
-
-// Blog category page
-Route::get('/blog/category/{category}', function ($category) {
-    return view('blog.index');
-})->name('blog.category');
-
-// Blog tag page
-Route::get('/blog/tag/{tag}', function ($tag) {
-    return view('blog.index');
-})->name('blog.tag');
-
-// Blog search page
-Route::get('/blog/search', function () {
-    return view('blog.index');
-})->name('blog.search');
+// Blog Routes
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/search', [BlogController::class, 'search'])->name('blog.search');
+Route::get('/blog/category/{slug}', [BlogController::class, 'category'])->name('blog.category');
+Route::get('/blog/tag/{slug}', [BlogController::class, 'tag'])->name('blog.tag');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // Newsletter subscription
 Route::post('/newsletter/subscribe', function () {

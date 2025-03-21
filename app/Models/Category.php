@@ -15,7 +15,7 @@ class Category extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var array
      */
     protected $fillable = [
         'name',
@@ -33,11 +33,41 @@ class Category extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var array<string, string>
+     * @var array
      */
     protected $casts = [
         'status' => 'boolean',
     ];
+
+    /**
+     * Get the URL attribute.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return route('blog.category', $this->slug);
+    }
+
+    /**
+     * Get the user who created this category.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_id');
+    }
+
+    /**
+     * Get the user who last updated this category.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_id');
+    }
 
     /**
      * Get the blogs for the category.
@@ -77,21 +107,5 @@ class Category extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id');
-    }
-
-    /**
-     * Get the user who created the category.
-     */
-    public function creator(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_id');
-    }
-
-    /**
-     * Get the user who last updated the category.
-     */
-    public function updater(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'updated_id');
     }
 }

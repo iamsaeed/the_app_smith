@@ -1,26 +1,22 @@
 <x-app-layout>
-  <!-- Hero Section -->
-  <section class="relative pt-24 pb-16 bg-gradient-to-r from-blue-600 to-indigo-700 overflow-hidden">
-    <div class="absolute inset-0 opacity-20">
-      <div class="absolute inset-0 bg-[url('/img/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-    </div>
-    <div class="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-          Our Products
-        </h1>
-        <p class="text-xl text-blue-100 mb-8">
-          Discover our collection of high-quality products designed to meet your needs
-        </p>
-      </div>
-    </div>
-    <!-- Wave Design -->
-    <div class="absolute bottom-0 left-0 right-0">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="text-white">
-        <path fill="currentColor" fill-opacity="1" d="M0,128L60,138.7C120,149,240,171,360,181.3C480,192,600,192,720,176C840,160,960,128,1080,117.3C1200,107,1320,117,1380,122.7L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-      </svg>
-    </div>
-  </section>
+    <x-slot name="title">Products - Quality Solutions for Your Needs</x-slot>
+    <x-slot name="meta_description">Browse our range of high-quality products designed to meet your needs.</x-slot>
+    <x-slot name="meta_keywords">products, solutions, quality items</x-slot>
+
+    <!-- Hero Section -->
+    <section class="relative pt-24 md:pt-28 lg:pt-32 pb-12 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div class="absolute inset-0 bg-white/40 z-0"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 opacity-0 transform translate-y-4 transition duration-700 ease-out fade-in">
+                    Our Products
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto opacity-0 transform translate-y-4 transition duration-700 delay-100 ease-out fade-in">
+                    Discover high-quality solutions tailored to your specific needs
+                </p>
+            </div>
+        </div>
+    </section>
 
   <!-- Products Section -->
   <section class="py-16 bg-gray-50">

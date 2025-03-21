@@ -1,39 +1,29 @@
 <x-app-layout>
-  <!-- Hero Section -->
-  <section class="relative bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div>
-          <h1 class="text-4xl md:text-5xl font-bold mb-6">
-            Streamline Your E-Commerce Operations
-          </h1>
-          <p class="text-xl text-blue-100 mb-8">
-            A powerful, all-in-one e-commerce solution that helps you manage products, process orders, and grow your business with ease.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#demo" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 transition-colors">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-              Watch Demo
-            </a>
-            <a href="#pricing" class="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-base font-medium rounded-md text-white hover:bg-white hover:text-blue-600 transition-colors">
-              Get Started
-            </a>
-          </div>
+    <x-slot name="title">{{ $product->meta_title ?? $product->name }}</x-slot>
+    <x-slot name="meta_description">{{ $product->meta_description ?? $product->short_description }}</x-slot>
+    <x-slot name="meta_keywords">{{ isset($product->meta_keywords) && is_array($product->meta_keywords) ? implode(', ', $product->meta_keywords) : $product->meta_keywords }}</x-slot>
+
+    <!-- Hero Section -->
+    <section class="relative pt-24 md:pt-28 lg:pt-32 pb-12 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div class="absolute inset-0 bg-white/40 z-0"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="flex flex-wrap justify-center gap-2 mb-3">
+                    @foreach($product->categories as $category)
+                    <a href="{{ url('products/category/' . $category->slug) }}" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-medium hover:bg-indigo-200">
+                        {{ $category->name }}
+                    </a>
+                    @endforeach
+                </div>
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 opacity-0 transform translate-y-4 transition duration-700 ease-out fade-in">
+                    {{ $product->name }}
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto opacity-0 transform translate-y-4 transition duration-700 delay-100 ease-out fade-in">
+                    {{ $product->short_description }}
+                </p>
+            </div>
         </div>
-        <div class="relative">
-          <div class="aspect-w-16 aspect-h-9 rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src="https://images.unsplash.com/photo-1557821552-17105176677c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-              alt="E-Commerce Dashboard Preview"
-              class="w-full h-full object-cover"
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
   <!-- Features Section -->
   <section class="py-20 bg-white">
